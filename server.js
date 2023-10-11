@@ -1,9 +1,9 @@
 const http = require("http");
 const mongodb = require("mongodb");
+const dotenv = require("dotenv");
+dotenv.config();
 
-let db;
-const connectionString =
-  "mongodb+srv://user01:X6fRByv7C1oEjwXb@nodejs.i14q1bn.mongodb.net/todolist_test?retryWrites=true&w=majority"; // database name: todolist_test
+const connectionString = process.env.MONGO_URL; // database name: Papay; Connection string moved to environment file
 // 3)
 mongodb.connect(
   connectionString,
@@ -18,7 +18,7 @@ mongodb.connect(
       const app = require("./app");
 
       const server = http.createServer(app);
-      let PORT = 3003;
+      let PORT = process.env.PORT || 3003;
       server.listen(PORT, function () {
         console.log(
           `server is running on port ${PORT}, http://localhost:${PORT}`
