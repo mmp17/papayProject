@@ -1,6 +1,7 @@
 console.log("Server started");
 const express = require("express");
 const app = express();
+const router = require("./router");
 
 // MonGoDB connect
 const db = require("./server").db();
@@ -18,5 +19,6 @@ app.set("views", "views");
 app.set("view engine", "ejs");
 
 //4 Routing codes - BSSR
+app.use("/", router);
 
 module.exports = app;
