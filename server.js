@@ -1,22 +1,19 @@
 const http = require("http");
-const mongodb = require("mongodb");
+const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 
 const connectionString = process.env.MONGO_URL; // database name: Papay; Connection string moved to environment file
-// 3)
-mongodb.connect(
+
+mongoose.connect(
   connectionString,
   { useNewUrlParser: true, useUnifiedTopology: true },
-  (err, client) => {
+  (err, goose) => {
     if (err) console.log(`Error on connecting to MongoDB`);
     else {
       console.log("MongoDB connection succeeded");
-
-      module.exports = client;
-
+      // console.log(goose);
       const app = require("./app");
-
       const server = http.createServer(app);
       let PORT = process.env.PORT || 3003;
       server.listen(PORT, function () {
