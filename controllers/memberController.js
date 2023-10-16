@@ -4,9 +4,10 @@ const Member = require("../models/Member");
 memberController.signup = async (req, res) => {
   try {
     console.log("POST: controller.signup requested");
-    const data = req.body;
-    const member = new Member();
-    const new_member = await member.signupData(data);
+    const data = req.body,
+      member = new Member(),
+      new_member = await member.signupData(data);
+
     res.json({ state: "succeed", data: new_member });
   } catch (error) {
     console.log(`Error, controller/signup ${err.message}`);
@@ -14,9 +15,18 @@ memberController.signup = async (req, res) => {
   }
 };
 
-memberController.login = (req, res) => {
-  console.log("POST controller.login requested");
-  res.send("Welcome to login page");
+memberController.login = async (req, res) => {
+  try {
+    console.log("POST: controller.login requested");
+    const data = req.body,
+      member = new Member(),
+      result = await member.loginData(data);
+
+    res.json({ state: "succeed", data: result });
+  } catch (error) {
+    console.log(`Error, controller/login ${error.message}`);
+    res.json({ state: "fail", message: error.message });
+  }
 };
 
 memberController.logout = (req, res) => {
