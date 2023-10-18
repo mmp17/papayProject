@@ -2,6 +2,7 @@ console.log("Server started");
 const express = require("express");
 const app = express();
 const router = require("./router");
+const router_bssr = require("./router_bssr.js");
 
 //1 Entry codes
 app.use(express.static("public"));
@@ -15,7 +16,7 @@ app.set("views", "views");
 app.set("view engine", "ejs");
 
 //4 Routing codes - BSSR
-// app.use("/resto", router_bssr);
+app.use("/resto", router_bssr);
 app.use("/", router);
 
 module.exports = app;
