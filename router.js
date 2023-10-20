@@ -3,7 +3,7 @@ const router = express.Router();
 const memberController = require("./controllers/memberController");
 
 /********************************
- *            REST API          *
+ *      React REST API          *
  * ******************************/
 
 // member related routers
