@@ -7,21 +7,18 @@ const restaurantController = require("./controllers/restaurantController");
  * ******************************/
 
 // member related routers (methods)
-router_bssr.get("/signup", restaurantController.getSignupMyRestaurant);
-router_bssr.post("/signup", restaurantController.signupProcess);
+router_bssr
+  .get("/signup", restaurantController.getSignupMyRestaurant)
+  .post("/signup", restaurantController.signupProcess);
 
-router_bssr.get("/login", restaurantController.getLoginMyRestaurant);
-router_bssr.post("/login", restaurantController.loginProcess);
+router_bssr
+  .get("/login", restaurantController.getLoginMyRestaurant)
+  .post("/login", restaurantController.loginProcess);
 
 router_bssr.get("/logout", restaurantController.logout);
 
-// other routers (methods)
-router_bssr.get("/menu", (req, res) => {
-  res.send("Welcome to Menu Page");
-});
+router_bssr.get("/products/menu", restaurantController.getMyRestaurantData);
 
-router_bssr.get("/community", (req, res) => {
-  res.send("Welcome to Community Page");
-});
+// other routers (methods)
 
 module.exports = router_bssr;

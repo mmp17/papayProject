@@ -38,7 +38,6 @@ class Member {
         .exec();
 
       assert.ok(member, Definer.err_auth3);
-      console.log("Member:::", member);
 
       const isMatch = await bcrypt.compare(
         input.mb_password,
