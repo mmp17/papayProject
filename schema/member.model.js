@@ -1,3 +1,4 @@
+// Code defines a Mongoose schema for a MongoDB collection named "<Member>"
 const mongoose = require("mongoose");
 const {
   member_type_enums,
