@@ -8,7 +8,10 @@ const Product = require("../models/Product"); //  imports the Product model, whi
 productController.getAllProducts = async (req, res) => {
   try {
     console.log("GET: controller/getAllProducts");
-  } catch {
+    const product = new Product();
+    const results = await product.getAllProductsData(req.member, req.body);
+    res.json({ state: "success", data: results });
+  } catch (err) {
     console.log(`Error, controller/getAllProducts, ${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
