@@ -94,6 +94,49 @@ class Order {
       throw new Error(Definer.order_err2);
     }
   }
+
+  async getMyOrdersData(member, query) {
+    // asynchronous function designed to retrieve a member's orders from a MongoDB database using the Mongoose ODM
+    try {
+      const mb_id = shapeIntoMongooseObjectId(member._id), // Converts the member's _id to a MongoDB ObjectId.
+        order_status = query.status.toUpperCase(),
+        matches = { mb_id: mb_id, order_status: order_status };
+
+      const result = await this.orderModel
+        // This method is structured to handle complex data retrieval involving joining data from multiple collections, providing comprehensive order details for the member.
+        .aggregate([
+          // Aggregation Pipeline:
+          { $match: matches },
+          // Filters documents in the orderModel collection based on the match criteria.
+          { $sort: { createdAt: -1 } },
+          // Sorts the results in descending order based on the createdAt timestamp.
+          {
+            $lookup: {
+              // with "orderitems": Joins data from the "orderitems" collection to the orders based on the order_id.
+              from: "orderitems",
+              localField: "_id",
+              foreignField: "order_id",
+              as: "order_items",
+            },
+          },
+          {
+            $lookup: {
+              // with "products": Joins product data from the "products" collection to the items in the order.
+              from: "products",
+              localField: "order_items.product_id",
+              foreignField: "_id",
+              as: "product_data",
+            },
+          },
+        ])
+        .exec();
+      // Executes the aggregation pipeline and returns the results, which include the orders with their associated items and product data.
+      console.log("req.query:", result);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = Order;
