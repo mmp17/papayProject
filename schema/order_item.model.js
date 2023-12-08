@@ -1,3 +1,4 @@
+// This code defines a Mongoose schema for an "OrderItem" collection in MongoDB
 const mongoose = require("mongoose");
 const { order_status_enums } = require("../lib/config");
 const Schema = mongoose.Schema;
@@ -17,3 +18,4 @@ const orderItemSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("OrderItem", orderItemSchema);
+// Link: This schema is structured to manage individual items within an order, linking them to their respective orders and products.
