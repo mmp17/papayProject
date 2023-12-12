@@ -41,3 +41,18 @@ orderController.getMyOrders = async (req, res) => {
     // If an error occurs, it logs the error message and sends a response indicating failure with the error message.
   }
 };
+
+orderController.editChosenOrder = async (req, res) => {
+  try {
+    console.log("POST: cont/editChosenOrder");
+    assert.ok(req.member, Definer.auth_err5);
+    // console.log("req.body:::", req.body.order_status);
+
+    const order = new Order();
+    const result = await order.editChosenOrderData(req.member, req.body);
+    res.json({ state: "success", data: result });
+  } catch (err) {
+    console.log(`ERROR, cont/editChosenOrder, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};

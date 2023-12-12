@@ -108,7 +108,7 @@ class Order {
           // Aggregation Pipeline:
           { $match: matches },
           // Filters documents in the orderModel collection based on the match criteria.
-          { $sort: { createdAt: -1 } },
+          { $sort: { updatedAt: -1 } },
           // Sorts the results in descending order based on the createdAt timestamp.
           {
             $lookup: {
@@ -132,6 +132,26 @@ class Order {
         .exec();
       // Executes the aggregation pipeline and returns the results, which include the orders with their associated items and product data.
       console.log("req.query:", result);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async editChosenOrderData(member, data) {
+    try {
+      const mb_id = shapeIntoMongooseObjectId(member._id),
+        order_id = shapeIntoMongooseObjectId(data.order_id),
+        order_status = data.order_status.toUpperCase();
+
+      const result = await this.orderModel.findOneAndUpdate(
+        { mb_id: mb_id, _id: order_id },
+        { order_status: order_status },
+        { runValidators: true, lean: true, returnDocument: "after" }
+      );
+      // console.log(result);
+
+      assert.ok(result, Definer.order_err3);
       return result;
     } catch (err) {
       throw err;
