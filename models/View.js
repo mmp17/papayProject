@@ -2,6 +2,7 @@ const { group } = require("mongodb/lib/operations/collection_ops");
 const ViewModel = require("../schema/view.model");
 const MemberModel = require("../schema/member.model");
 const ProductModel = require("../schema/product.model");
+const BoArticleModel = require("../schema/bo_article.model");
 // code defines a class View for managing views in a MongoDB database using Mongoose models.
 // The class includes methods to validate, insert, and modify views in the database
 
@@ -11,11 +12,12 @@ class View {
     this.viewModel = ViewModel;
     this.memberModel = MemberModel;
     this.productModel = ProductModel;
+    this.boArticleModel = BoArticleModel;
     this.mb_id = mb_id;
   }
 
   async validateChosenTarget(view_ref_id, group_type) {
-    // Validates if a target (member or product) with a given ID and group type exists and is active or in process.
+    // Validates if a target (member, product or community) with a given ID and group type exists and is active or in process.
     try {
       let result;
       switch (group_type) {
@@ -32,6 +34,14 @@ class View {
             .findOne({
               _id: view_ref_id,
               product_status: "PROCESS",
+            })
+            .exec();
+          break;
+        case "community":
+          result = await this.boArticleModel
+            .findOne({
+              _id: view_ref_id,
+              art_status: "active",
             })
             .exec();
           break;
@@ -98,6 +108,16 @@ class View {
                 _id: view_ref_id,
               },
               { $inc: { product_views: 1 } }
+            )
+            .exec();
+          break;
+        case "community":
+          await this.boArticleModel
+            .findByIdAndUpdate(
+              {
+                _id: view_ref_id,
+              },
+              { $inc: { art_views: 1 } }
             )
             .exec();
           break;
