@@ -113,10 +113,10 @@ class Order {
           {
             $lookup: {
               // with "orderitems": Joins data from the "orderitems" collection to the orders based on the order_id.
-              from: "orderitems",
+              from: "orderitems", // joins data from
               localField: "_id",
-              foreignField: "order_id",
-              as: "order_items",
+              foreignField: "order_id", // based on the order_id.
+              as: "order_items", // saves as
             },
           },
           {
