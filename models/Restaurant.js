@@ -1,7 +1,10 @@
 const assert = require("assert");
 const Definer = require("../lib/mistake.js");
 const MemberModel = require("../schema/member.model.js");
-const { shapeIntoMongooseObjectId } = require("../lib/config.js");
+const {
+  shapeIntoMongooseObjectId,
+  lookup_auth_member_liked,
+} = require("../lib/config.js");
 const Member = require("./Member.js");
 
 class Restaurant {
@@ -12,7 +15,7 @@ class Restaurant {
   async getRestaurantsData(member, data) {
     // The method is designed to fetch and return a list of restaurants based on specific criteria and includes pagination, random sampling, and sorting capabilities.
     try {
-      const auth_member_id = shapeIntoMongooseObjectId(member?._id);
+      const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
       let match = { mb_type: "RESTAURANT", mb_status: "ACTIVE" };
       let aggregationQuery = [];
       data.limit = data["limit"] * 1;
@@ -37,7 +40,8 @@ class Restaurant {
 
       aggregationQuery.push({ $skip: (data.page - 1) * data.limit });
       aggregationQuery.push({ $limit: data.limit });
-      // todo: check if auth member liked the chosen target
+      // check if auth member liked the chosen target
+      aggregationQuery.push(lookup_auth_member_liked(auth_mb_id));
 
       const result = await this.memberModel.aggregate(aggregationQuery).exec();
       assert.ok(result, Definer.general_err1);

@@ -1,5 +1,8 @@
 const assert = require("assert"); // A module for asserting truthy values.
-const { shapeIntoMongooseObjectId } = require("../lib/config");
+const {
+  shapeIntoMongooseObjectId,
+  lookup_auth_member_liked,
+} = require("../lib/config");
 // utility function that converts some value into a Mongoose ObjectID.
 const Definer = require("../lib/mistake");
 const ProductModel = require("../schema/product.model");
@@ -33,8 +36,9 @@ class Product {
           { $sort: sort },
           { $skip: (data.page * 1 - 1) * data.limit },
           { $limit: data.limit * 1 },
+          // check auth member product likes
+          lookup_auth_member_liked(auth_mb_id),
         ])
-        // todo: check auth member product likes
         .exec();
 
       assert.ok(result, Definer.general_err1);
