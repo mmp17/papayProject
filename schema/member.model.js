@@ -100,3 +100,4 @@ const memberSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Member", memberSchema);
+// The schema is compiled into a model and exported, allowing it to be used elsewhere in the application to interact with the "Member" collection.
