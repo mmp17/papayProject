@@ -1,6 +1,7 @@
 // This code initializes a Node.js server using the Express framework and configures various middlewares, including session handling with MongoDB and routing.
 // Required Modules and Constants:
 console.log("Server started");
+const http = require("http"); // Core Node.js module to create HTTP server.
 const express = require("express"); // Imports the Express framework.
 const app = express(); // Creates an instance of an Express application.
 const router = require("./router"); // custom routers defined in files
@@ -63,4 +64,33 @@ app.set("view engine", "ejs"); // Sets the view engine to "ejs", which is a popu
 app.use("/resto", router_bssr); // Adminka routes
 app.use("/", router); // for React FE project
 
-module.exports = app; // This exports the configured app instance, to be used by another module to start the server or for testing purposes.
+const server = http.createServer(app);
+
+// Socket.IO Backend Server
+
+const io = require("socket.io")(server, {
+  serverClient: false,
+  origins: "*:*",
+  transport: ["websocket", "xhr-polling"],
+});
+
+let online_users = 0;
+io.on("connection", function (socket) {
+  online_users++;
+  console.log("New user, total:", online_users);
+  socket.emit("greetMsg", { text: "welcome" });
+  io.emit("infoMsg", { total: online_users });
+
+  socket.on("disconnect", function () {
+    online_users--;
+    socket.broadcast.emit("infoMsg", { total: online_users });
+    console.log("client disconnected, total:", online_users);
+  });
+
+  socket.on("createMsg", function (data) {
+    console.log(data);
+    io.emit("newMsg", data);
+  });
+});
+
+module.exports = server;
